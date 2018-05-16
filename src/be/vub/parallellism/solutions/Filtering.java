@@ -27,5 +27,13 @@ public interface Filtering {
 		return comments;
 	}
 	
+	public static List<Comment> filter_seq_by_substring (int dataset, String subsubstring) throws IOException {
+		
+		String[] data = new String[]{"./files/dataset_" + Integer.toString(dataset) + ".json", };
+		List<Comment> comments = RedditCommentLoader.readData(data, comment -> comment.body.contains(subsubstring));
+		
+		return comments;
+	}
+	
 	
 }

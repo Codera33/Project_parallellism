@@ -13,49 +13,70 @@ import java.util.Map;
 import org.apache.log4j.BasicConfigurator;
 
 public class SequentialAnalyser {
-	
+
 	int database;
-	
-	
-	public SequentialAnalyser (int database) {
+
+	public SequentialAnalyser(int database) {
 		this.database = database;
 	}
 
-    public double analyze() {
-        SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer();
-        BasicConfigurator.configure();
+	public static float analyze_seq_by_subreddit(List<Comment> comments, String subReddit,
+			SentimentAnalyzer sentimentAnalyzer) {
 
-        try {
+		try {
 
-            List<Comment> comments = Filtering.no_filter(database);
-            // If you want to sequentially filter the data based on the comment (to reduce a data set), use a lambda
-            // List<Comment> comments = RedditCommentLoader.readData(data, comment -> comment.body.contains("BMW"));
+			float totalCompoundScore = 0;
 
-            // System.out.println(comments.size());
+			long t_before_count = System.nanoTime();
 
-            float totalCompoundScore = 0;
-            
+			for (Comment comment : comments) {
+				if ((comment.subreddit).equals(subReddit)) {
+					sentimentAnalyzer.setInputString(comment.body);
+					sentimentAnalyzer.setInputStringProperties();
+					sentimentAnalyzer.analyze();
 
-    		long t_before_count = System.nanoTime();
+					Map<String, Float> inputStringPolarity = sentimentAnalyzer.getPolarity();
+					float commentCompoundScore = inputStringPolarity.get(ScoreType.COMPOUND);
 
-            for (Comment comment : comments) {
-                sentimentAnalyzer.setInputString(comment.body);
-                sentimentAnalyzer.setInputStringProperties();
-                sentimentAnalyzer.analyze();
+					totalCompoundScore += commentCompoundScore;
+				}
+			}
+			
 
-                Map<String, Float> inputStringPolarity = sentimentAnalyzer.getPolarity();
-                float commentCompoundScore = inputStringPolarity.get(ScoreType.COMPOUND);
-
-                totalCompoundScore += commentCompoundScore;
-            }
-            
-    		double d_filtering = (System.nanoTime()-t_before_count)/1000000.0;
-            
-            return d_filtering;
-        }
-        catch (IOException e) {
-            System.out.println(e.toString());
-        }
+			return totalCompoundScore;
+		} catch (IOException e) {
+			System.out.println(e.toString());
+		}
 		return 0;
-    }
+	}
+	
+	public static float analyze_seq_by_substring(List<Comment> comments, String subString,
+			SentimentAnalyzer sentimentAnalyzer) {
+
+		try {
+
+			float totalCompoundScore = 0;
+
+			long t_before_count = System.nanoTime();
+
+			for (Comment comment : comments) {
+				if ((comment.body).contains(subString)) {
+					sentimentAnalyzer.setInputString(comment.body);
+					sentimentAnalyzer.setInputStringProperties();
+					sentimentAnalyzer.analyze();
+
+					Map<String, Float> inputStringPolarity = sentimentAnalyzer.getPolarity();
+					float commentCompoundScore = inputStringPolarity.get(ScoreType.COMPOUND);
+
+					totalCompoundScore += commentCompoundScore;
+				}
+			}
+			
+
+			return totalCompoundScore;
+		} catch (IOException e) {
+			System.out.println(e.toString());
+		}
+		return 0;
+	}
 }
