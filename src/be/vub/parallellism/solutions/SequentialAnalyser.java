@@ -14,14 +14,7 @@ import org.apache.log4j.BasicConfigurator;
 
 public class SequentialAnalyser {
 
-	int database;
-
-	public SequentialAnalyser(int database) {
-		this.database = database;
-	}
-
-	public static float analyze_seq_by_subreddit(List<Comment> comments, String subReddit,
-			SentimentAnalyzer sentimentAnalyzer) {
+	public static float analyze_seq_by_subreddit(List<Comment> comments, String subReddit) {
 
 		try {
 
@@ -29,8 +22,10 @@ public class SequentialAnalyser {
 
 			long t_before_count = System.nanoTime();
 
+		    SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer();
+
+
 			for (Comment comment : comments) {
-				if ((comment.subreddit).equals(subReddit)) {
 					sentimentAnalyzer.setInputString(comment.body);
 					sentimentAnalyzer.setInputStringProperties();
 					sentimentAnalyzer.analyze();
@@ -39,7 +34,6 @@ public class SequentialAnalyser {
 					float commentCompoundScore = inputStringPolarity.get(ScoreType.COMPOUND);
 
 					totalCompoundScore += commentCompoundScore;
-				}
 			}
 			
 
@@ -50,14 +44,15 @@ public class SequentialAnalyser {
 		return 0;
 	}
 	
-	public static float analyze_seq_by_substring(List<Comment> comments, String subString,
-			SentimentAnalyzer sentimentAnalyzer) {
+	public static float analyze_seq_by_substring(List<Comment> comments, String subString) {
 
 		try {
 
 			float totalCompoundScore = 0;
 
 			long t_before_count = System.nanoTime();
+			
+		    SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer();
 
 			for (Comment comment : comments) {
 				if ((comment.body).contains(subString)) {

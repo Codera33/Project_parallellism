@@ -44,8 +44,6 @@ public class ParallelAnalyser {
 		// return the result
 
 		double d_filtering = (System.nanoTime()-t_before_count)/1000000.0;
-		System.out.println(d_filtering);
-		System.out.println(res / comments.size());
 		
 		return res;
 	}
@@ -63,8 +61,6 @@ public class ParallelAnalyser {
 		// return the result
 
 		double d_filtering = (System.nanoTime()-t_before_count)/1000000.0;
-		System.out.println(d_filtering);
-		System.out.println(res / comments.size());
 		
 		return res;
 	}
@@ -82,8 +78,6 @@ public static float analyze_by_substring_par_alltrue(List<Comment> comments, Str
 		// return the result
 
 		double d_filtering = (System.nanoTime()-t_before_count)/1000000.0;
-		System.out.println(d_filtering);
-		System.out.println(res / comments.size());
 		
 		return res;
 	}
@@ -101,8 +95,6 @@ public static float analyze_by_substring_par(List<Comment> comments, String subs
 	// return the result
 
 	double d_filtering = (System.nanoTime()-t_before_count)/1000000.0;
-	System.out.println(d_filtering);
-	System.out.println(res / comments.size());
 	
 	return res;
 }

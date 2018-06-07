@@ -25,12 +25,10 @@ import java.util.concurrent.RecursiveTask;
 public class CommentArrayAnalyser extends RecursiveTask<Float> {
 	private static final long serialVersionUID = 1L;
 
-    SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer();
-
 	private final List<Comment> comments;
 	private final int sequentialCutOff;
-	private final int low;
-	private final int high;
+	private int low;
+	private int high;
 	private float result;
 	private final String keyword;
 	private final boolean look_by_subreddit;
@@ -44,7 +42,7 @@ public class CommentArrayAnalyser extends RecursiveTask<Float> {
 	
 	CommentArrayAnalyser(List<Comment> comments, String keyword, int sequentialCutOff, boolean look_by_subreddit, int low, int high) {
 
-		this.comments = comments;
+		this.comments = comments;;
 		this.sequentialCutOff = sequentialCutOff;
 		this.low = low;
 		this.high = high;
@@ -75,10 +73,13 @@ public class CommentArrayAnalyser extends RecursiveTask<Float> {
 	private float analyseChunkOfArray(List<Comment> comments) throws IOException {
 
 		float totalCompoundScore = 0;
+		
+
+
+	    SentimentAnalyzer sentimentAnalyzer = new SentimentAnalyzer();
 
 		for (Comment c : comments) {
 			if (look_by_subreddit) {
-				if ((c.subreddit).equals(keyword)) {
 					sentimentAnalyzer.setInputString(c.body);
 					sentimentAnalyzer.setInputStringProperties();
 					sentimentAnalyzer.analyze();
@@ -87,7 +88,6 @@ public class CommentArrayAnalyser extends RecursiveTask<Float> {
 					float commentCompoundScore = inputStringPolarity.get(ScoreType.COMPOUND);
 
 					totalCompoundScore += commentCompoundScore;
-				}
 			} else {
 				if ((c.body).contains(keyword)) {
 					sentimentAnalyzer.setInputString(c.body);
